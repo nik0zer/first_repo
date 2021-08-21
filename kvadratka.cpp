@@ -4,6 +4,7 @@
 #include <string.h>
 
 #define TEST true
+
 #define PRECISION 0.0001
 
 /*!
@@ -83,6 +84,8 @@ int kvadratka(float a, float b, float c, float* x1, float* x2)
     assert(x1 != NULL);
     assert(x2 != NULL);
     assert(x2 != x1);
+    *x1 = 0;
+    *x2 = 0;
     if(abs(a) < PRECISION && abs(b) < PRECISION && abs(c) < PRECISION)
     {
         return 8;
@@ -96,6 +99,12 @@ int kvadratka(float a, float b, float c, float* x1, float* x2)
         *x1 = schet_linear(b, c);
         return 1;
     }
+    if(check(a, b, c) == 0)
+    {
+        *x1 = 0;
+        *x2 = 0;
+        return 0;
+    }
     schet_kvadr(a, b, c, x1, x2);
     return check(a, b, c);
 }
@@ -108,37 +117,21 @@ int kvadratka(float a, float b, float c, float* x1, float* x2)
 void test()
 {
     int k = 9;
-    float x1, x2;
+    float x1 = 0, x2 = 0;
     float data[k][3]= {{1, 4,-3}, {1, 0, -4}, {0,0,0}, {0,4,5}, {0, 0, 5}, {2, 3, 7}, {15246, 120536, -645721}, {0, 1154526, -1125452}, {1, -2068, 1069156}};
-    char data_check[k][50] = {"2:-4.6458 0.6458", "2:-2.0000 2.0000", "8:", "1:-1.2500", "0:", "0:", "2:-11.5675 3.6614", "1:0.9748", "1:1034.0000"};
+    float data_check[k][3] = {{2, -4.6458, 0.6458}, {2, -2.0000, 2.0000}, {8, 0, 0} , {1, -1.2500, 0}, {0, 0, 0}, {0, 0, 0}, {2, -11.5675, 3.6614}, {1, 0.9748, 0}, {1, 1034.0000, 1034.0000}};
     for(int i = 0; i < k; i++)
     {
-        char str[50];
         int number_of_roots = kvadratka(data[i][0], data[i][1], data[i][2], &x1, &x2);
-        switch(number_of_roots)
-        {
-        case 0:
-            sprintf(str, "0:");
-            break;
-        case 1:
-            sprintf(str, "1:%.4f", x1);
-            break;
-        case 2:
-            sprintf(str, "2:%.4f %.4f", x1, x2);
-            break;
-        case 8:
-            sprintf(str, "8:");
-            break;
-        }
-        if(strcmp(data_check[i], str) == 0)
+        if(number_of_roots == int(data_check[i][0]) && abs(x1 - data_check[i][1]) < PRECISION && abs(x2 - data_check[i][2]) < PRECISION)
         {
             printf("test %i OK\n", i + 1);
         }
         else
         {
             printf("test %i FAILED\n", i + 1);
-            printf("right output: %s\n", data_check[i]);
-            printf("program output: %s\n", str);
+            printf("right output: %i %.4f %.4f\n", int(data_check[i][0]), data_check[i][1], data_check[i][2]);
+            printf("program output: %i %.4f %.4f\n", number_of_roots, x1, x2);
         }
     }
 }
