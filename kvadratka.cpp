@@ -99,7 +99,6 @@ int kvadratka(float a, float b, float c, float* x1, float* x2)
 */
 void test()
 {
-    int k = 9;
     float x1 = 0, x2 = 0;
     float data[NUMBER_OF_TESTS][3]= {{    1,      4,      -3}, {1,       0,       -4}, {0,     0,       0},
                                      {    0,      4,       5}, {0,       0,        5}, {2,     3,       7},
@@ -135,9 +134,10 @@ int main()
         return 0;
     }
     puts("type a b c");
-    if(scanf("%f %f %f", &a, &b, &c) == 3);
+    if(scanf("%f %f %f", &a, &b, &c) != 3);
     {
         puts("invalid input");
+        return 0;
     }
     int number_of_roots = kvadratka(a, b, c, &x1, &x2);
     if(number_of_roots != 8)
@@ -152,4 +152,3 @@ int main()
     puts("roots belongs to R");
     return 0;
 }
-
