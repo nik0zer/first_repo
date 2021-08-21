@@ -15,13 +15,9 @@
 int floatcmp(float x1, float x2)
 {
     if((x1 - x2) > PRECISION)
-    {
         return 1;
-    }
     if((x1 - x2) < -PRECISION)
-    {
         return -1;
-    }
     return 0;
 }
 
@@ -54,13 +50,9 @@ int check(float a, float b, float c)
 float schet_linear(float b, float c)
 {
     if(floatcmp(c, 0) == 0)
-    {
         return float(0);
-    }
     else
-    {
         return -c / b;
-    }
 }
 
 /*!
@@ -83,6 +75,7 @@ void schet_kvadr(float a, float b, float c, float* x1, float* x2)
     *x1 = -d + const_part;
     *x2 =  d + const_part;
 }
+
 /*!
 \brief Решает квадратное уравнение от переданных коэффициентов
 \detail Решает квадрратное уравнение разбивая на различные случаи в зависимости от входных данных квадратное, линейное и т.д
@@ -99,9 +92,7 @@ int kvadratka(float a, float b, float c, float* x1, float* x2)
     *x1 = 0;
     *x2 = 0;
     if(floatcmp(a, 0) == 0 && floatcmp(b, 0) == 0)
-    {
         return (floatcmp(c, 0) == 0) ? 8 : 0;
-    }
     if(floatcmp(a, 0) == 0)
     {
         *x1 = schet_linear(b, c);
@@ -120,15 +111,15 @@ void test()
 {
     int k = 9;
     float x1 = 0, x2 = 0;
-    float data[k][3]= {{1, 4,-3}, {1, 0, -4}, {0,0,0}, {0,4,5}, {0, 0, 5}, {2, 3, 7}, {15246, 120536, -645721}, {0, 1154526, -1125452}, {1, -2068, 1069156}};
-    float data_check[k][3] = {{2, -4.6458, 0.6458}, {2, -2.0000, 2.0000}, {8, 0, 0}, {1, -1.2500, 0}, {0, 0, 0}, {0, 0, 0}, {2, -11.5675, 3.6614}, {1, 0.9748, 0}, {1, 1034.0000, 1034.0000}};
+    float data[k][3]= {{1, 4,-3}, {1, 0, -4}, {0,0,0}, {0,4,5}, {0, 0, 5}, {2, 3, 7},
+    {15246, 120536, -645721},{0, 1154526, -1125452}, {1, -2068, 1069156}};
+    float data_check[k][3] = {{2, -4.6458, 0.6458}, {2, -2.0000, 2.0000}, {8, 0, 0}, {1, -1.2500, 0}, {0, 0, 0},
+    {0, 0, 0}, {2, -11.5675, 3.6614}, {1, 0.9748, 0}, {1, 1034.0000, 1034.0000}};
     for(int i = 0; i < k; i++)
     {
         int number_of_roots = kvadratka(data[i][0], data[i][1], data[i][2], &x1, &x2);
         if(number_of_roots == int(data_check[i][0]) && floatcmp(x1, data_check[i][1]) == 0 && floatcmp(x2, data_check[i][2]) == 0)
-        {
             printf("test %i OK\n", i + 1);
-        }
         else
         {
             printf("test %i FAILED\n", i + 1);
@@ -158,17 +149,12 @@ int main()
     {
         printf("number of roots: %d\n", number_of_roots);
         if(number_of_roots == 1)
-        {
             printf("root: %.4f\n", x1);
-        }
         if(number_of_roots == 2)
-        {
             printf("roots: %.4f %.4f\n", x1, x2);
-        }
         return 0;
     }
     puts("roots belongs to R");
     return 0;
 }
-
 
