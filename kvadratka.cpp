@@ -45,7 +45,7 @@ int check(float a, float b, float c)
 */
 float schet_linear(float b, float c)
 {
-    if(c == 0)
+    if(abs(c) < D)
     {
         return float(0);
     }
@@ -193,7 +193,7 @@ int main()
     else
     {
         puts("type a b c");
-        scanf("%f %f %f", &a, &b, &c); 
+        scanf("%f %f %f", &a, &b, &c);
         kvadratka(a, b, c, str);
         return 0;
     }
