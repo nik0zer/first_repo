@@ -132,20 +132,21 @@ void kvadratka(float a, float b, float c, char str[])
 
 void test()
 {
+    int k = 9;
     float a = 0, b, c;
-    float data[3][3]={{1, 4,-3},{1, 0, -4},{0,0,0}};
-    char data_check[3][50] = {"2:-4.6458 0.6458","2:-2.0000 2.0000","8:"};
-    for(int i = 0; i < 3; i++)
+    float data[k][3]={{1, 4,-3}, {1, 0, -4}, {0,0,0}, {0,4,5}, {0, 0, 5}, {2, 3, 7}, {15246, 120536, -645721}, {0, 1154526, -1125452}, {1, -2068, 1069156}};
+    char data_check[k][50] = {"2:-4.6458 0.6458", "2:-2.0000 2.0000", "8:", "1:-1.2500", "0:", "0:", "2:-11.5675 3.6614", "1:0.9748", "1:1034.0000"};
+    for(int i = 0; i < k; i++)
     {
         char str[50];
         kvadratka(data[i][0], data[i][1], data[i][2], str);
         if(strcmp(data_check[i], str) == 0)
         {
-            printf("test %i OK\n", i);
+            printf("test %i OK\n", i + 1);
         }
         else
         {
-            printf("test %i FAILED\n", i);
+            printf("test %i FAILED\n", i + 1);
             printf("right output: %s\n", data_check[i]);
             printf("program output: %s\n", str);
         }
