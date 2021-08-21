@@ -79,19 +79,19 @@ void kvadratka(float a, float b, float c, char str[])
     float x1 = 0, x2 = 0;
     if(TEST)
     {
-        if(a == 0 && b == 0 && c==0)
+        if(abs(a) < D && abs(b) < D && abs(c) < D)
         {
             sprintf(str, "8:");
         }
         else
         {
-            if(a == 0 && b == 0)
+            if(abs(a) < D && abs(b) < D)
             {
                 sprintf(str, "0:");
             }
             else
             {
-                if(a == 0)
+                if(abs(a) < D)
                 {
                     sprintf(str, "1:%.4f", schet_linear(b, c));
                 }
@@ -116,19 +116,19 @@ void kvadratka(float a, float b, float c, char str[])
     }
     else
     {
-        if(a == 0 && b == 0 && c==0)
+        if(abs(a) < D && abs(b) < D && abs(c) < D)
         {
             puts("roots belongs to R");
         }
         else
         {
-            if(a == 0 && b == 0)
+            if(abs(a) < D && abs(b) < D)
             {
                 puts("number of roots: 0");
             }
             else
             {
-                if(a == 0)
+                if(abs(a) < D)
                 {
                     puts("number of roots: 1");
                     printf("root: %.4f\n", schet_linear(b, c));
