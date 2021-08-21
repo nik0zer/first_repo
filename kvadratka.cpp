@@ -4,7 +4,7 @@
 #include <string.h>
 
 #define TEST true
-#define D 0.001
+#define D 0.0001
 
 /*!
 Находит дискриминант от переданных коэффициентов
