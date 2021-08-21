@@ -32,17 +32,6 @@ float discr(float a, float b, float c)
 }
 
 /*!
-\brief Находит количество корней квадратного уравнения от переданных коэффициентов
-\param a,b,с коэффициенты
-\return количество корней
-*/
-int check(float a, float b, float c)
-{
-    float d = discr(a, b, c);
-    return floatcmp(d, 0) + 1;
-}
-
-/*!
 \brief Находит корень линейного уравнения от переданных коэффициентов
 \param b,с коэффициенты
 \return корень
@@ -60,20 +49,22 @@ float schet_linear(float b, float c)
 \param a,b,с коэффициенты
 \param x1,x2 возвращаемые корни уравнения
 */
-void schet_kvadr(float a, float b, float c, float* x1, float* x2)
+int schet_kvadr(float a, float b, float c, float* x1, float* x2)
 {
     assert(x1 != NULL);
     assert(x2 != NULL);
     assert(x2 != x1);
-    if(check(a, b, c) == 0)
+    float d = discr(a, b, c);
+    if(floatcmp(d, 0) == -1)
     {
         *x1 = 0;
         *x2 = 0;
     }
-    float d = sqrt(discr(a, b, c)) / (2 * a);
+    float change_part = sqrt(d) / (2 * a);
     float const_part = -b / (2 * a);
-    *x1 = -d + const_part;
-    *x2 =  d + const_part;
+    *x1 = -change_part + const_part;
+    *x2 =  change_part + const_part;
+    return floatcmp(d, 0) + 1;
 }
 
 /*!
@@ -98,8 +89,7 @@ int kvadratka(float a, float b, float c, float* x1, float* x2)
         *x1 = schet_linear(b, c);
         return 1;
     }
-    schet_kvadr(a, b, c, x1, x2);
-    return check(a, b, c);
+    return schet_kvadr(a, b, c, x1, x2);
 }
 
 /*!
@@ -157,4 +147,5 @@ int main()
     puts("roots belongs to R");
     return 0;
 }
+
 
