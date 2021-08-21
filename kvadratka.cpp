@@ -8,6 +8,24 @@
 #define PRECISION 0.0001
 
 /*!
+\brief Сравнивает 2 float
+\param x1,x2 числа для сравнения
+\return 0 - равны, 1 - первое больше, 2 - второе больше, аналогия с strcmp
+*/
+int floatcmp(float x1, float x2)
+{
+    if((x1 - x2) > PRECISION)
+    {
+        return 1;
+    }
+    if((x1 - x2) < -PRECISION)
+    {
+        return -1;
+    }
+    return 0;
+}
+
+/*!
 \brief Находит дискриминант от переданных коэффициентов
 \param a,b,с коэффициенты
 \return дискриминант
@@ -25,18 +43,7 @@ float discr(float a, float b, float c)
 int check(float a, float b, float c)
 {
     float d = discr(a, b, c);
-    if(d < -PRECISION)
-    {
-        return 0;
-    }
-    if(abs(d) < PRECISION)
-    {
-        return 1;
-    }
-    if(d > PRECISION)
-    {
-        return 2;
-    }
+    return floatcmp(d, 0) + 1;
 }
 
 /*!
@@ -46,7 +53,7 @@ int check(float a, float b, float c)
 */
 float schet_linear(float b, float c)
 {
-    if(abs(c) < PRECISION)
+    if(floatcmp(c, 0) == 0)
     {
         return float(0);
     }
@@ -86,15 +93,15 @@ int kvadratka(float a, float b, float c, float* x1, float* x2)
     assert(x2 != x1);
     *x1 = 0;
     *x2 = 0;
-    if(abs(a) < PRECISION && abs(b) < PRECISION && abs(c) < PRECISION)
+    if(floatcmp(a, 0) == 0 && floatcmp(b, 0) == 0 && floatcmp(c, 0) == 0)
     {
         return 8;
     }
-    if(abs(a) < PRECISION && abs(b) < PRECISION)
+    if(floatcmp(a, 0) == 0 && floatcmp(b, 0) == 0)
     {
         return 0;
     }
-    if(abs(a) < PRECISION)
+    if(floatcmp(a, 0) == 0)
     {
         *x1 = schet_linear(b, c);
         return 1;
@@ -123,7 +130,7 @@ void test()
     for(int i = 0; i < k; i++)
     {
         int number_of_roots = kvadratka(data[i][0], data[i][1], data[i][2], &x1, &x2);
-        if(number_of_roots == int(data_check[i][0]) && abs(x1 - data_check[i][1]) < PRECISION && abs(x2 - data_check[i][2]) < PRECISION)
+        if(number_of_roots == int(data_check[i][0]) && floatcmp(x1, data_check[i][1]) == 0 && floatcmp(x2, data_check[i][2]) == 0)
         {
             printf("test %i OK\n", i + 1);
         }
@@ -172,3 +179,4 @@ int main()
         return 0;
     }
 }
+
