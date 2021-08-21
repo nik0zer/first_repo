@@ -4,7 +4,7 @@
 #include <string.h>
 
 #define TEST true
-#define number_of_tests 9
+#define NUMBER_OF_TESTS 9
 #define PRECISION 0.0001
 
 /*!
@@ -101,13 +101,13 @@ void test()
 {
     int k = 9;
     float x1 = 0, x2 = 0;
-    float data[number_of_tests][3]= {{    1,      4,      -3}, {1,       0,       -4}, {0,     0,       0},
+    float data[NUMBER_OF_TESTS][3]= {{    1,      4,      -3}, {1,       0,       -4}, {0,     0,       0},
                                      {    0,      4,       5}, {0,       0,        5}, {2,     3,       7},
                                      {15246, 120536, -645721}, {0, 1154526, -1125452}, {1, -2068, 1069156}};
-    float data_check[number_of_tests][3] = {{2,  -4.6458, 0.6458}, {2, -2.0000, 2.0000}, {8,         0,         0},
+    float data_check[NUMBER_OF_TESTS][3] = {{2,  -4.6458, 0.6458}, {2, -2.0000, 2.0000}, {8,         0,         0},
                                             {1,  -1.2500,      0}, {0,       0,      0}, {0,         0,         0},
                                             {2, -11.5675, 3.6614}, {1,  0.9748,      0}, {1, 1034.0000, 1034.0000}};
-    for(int i = 0; i < number_of_tests; i++)
+    for(int i = 0; i < NUMBER_OF_TESTS; i++)
     {
         int number_of_roots = kvadratka(data[i][0], data[i][1], data[i][2], &x1, &x2);
         if(number_of_roots == int(data_check[i][0]) && floatcmp(x1, data_check[i][1]) == 0 && floatcmp(x2, data_check[i][2]) == 0)
@@ -152,3 +152,4 @@ int main()
     puts("roots belongs to R");
     return 0;
 }
+
