@@ -134,7 +134,7 @@ int main()
         return 0;
     }
     puts("type a b c");
-    if(scanf("%f %f %f", &a, &b, &c) != 3);
+    if(scanf("%f %f %f", &a, &b, &c) != 3)
     {
         puts("invalid input");
         return 0;
