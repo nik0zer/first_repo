@@ -10,7 +10,7 @@
 /*!
 \brief Сравнивает 2 float
 \param x1,x2 числа для сравнения
-\return 0 - равны, 1 - первое больше, 2 - второе больше, аналогия с strcmp
+\return 0 - равны, 1 - первое больше, -1 - второе больше, аналогия с strcmp
 */
 int floatcmp(float x1, float x2)
 {
@@ -73,11 +73,16 @@ void schet_kvadr(float a, float b, float c, float* x1, float* x2)
     assert(x1 != NULL);
     assert(x2 != NULL);
     assert(x2 != x1);
-    float d = discr(a, b, c);
-    *x1 = (-sqrt(d) - b) / (2 * a);
-    *x2 = (sqrt(d) - b) / (2 * a);
+    if(check(a, b, c) == 0)
+    {
+        *x1 = 0;
+        *x2 = 0;
+    }
+    float d = sqrt(discr(a, b, c)) / (2 * a);
+    float const_part = -b / (2 * a);
+    *x1 = -d + const_part;
+    *x2 =  d + const_part;
 }
-
 /*!
 \brief Решает квадратное уравнение от переданных коэффициентов
 \detail Решает квадрратное уравнение разбивая на различные случаи в зависимости от входных данных квадратное, линейное и т.д
@@ -93,24 +98,14 @@ int kvadratka(float a, float b, float c, float* x1, float* x2)
     assert(x2 != x1);
     *x1 = 0;
     *x2 = 0;
-    if(floatcmp(a, 0) == 0 && floatcmp(b, 0) == 0 && floatcmp(c, 0) == 0)
-    {
-        return 8;
-    }
     if(floatcmp(a, 0) == 0 && floatcmp(b, 0) == 0)
     {
-        return 0;
+        return (floatcmp(c, 0) == 0) ? 8 : 0;
     }
     if(floatcmp(a, 0) == 0)
     {
         *x1 = schet_linear(b, c);
         return 1;
-    }
-    if(check(a, b, c) == 0)
-    {
-        *x1 = 0;
-        *x2 = 0;
-        return 0;
     }
     schet_kvadr(a, b, c, x1, x2);
     return check(a, b, c);
@@ -126,7 +121,7 @@ void test()
     int k = 9;
     float x1 = 0, x2 = 0;
     float data[k][3]= {{1, 4,-3}, {1, 0, -4}, {0,0,0}, {0,4,5}, {0, 0, 5}, {2, 3, 7}, {15246, 120536, -645721}, {0, 1154526, -1125452}, {1, -2068, 1069156}};
-    float data_check[k][3] = {{2, -4.6458, 0.6458}, {2, -2.0000, 2.0000}, {8, 0, 0} , {1, -1.2500, 0}, {0, 0, 0}, {0, 0, 0}, {2, -11.5675, 3.6614}, {1, 0.9748, 0}, {1, 1034.0000, 1034.0000}};
+    float data_check[k][3] = {{2, -4.6458, 0.6458}, {2, -2.0000, 2.0000}, {8, 0, 0}, {1, -1.2500, 0}, {0, 0, 0}, {0, 0, 0}, {2, -11.5675, 3.6614}, {1, 0.9748, 0}, {1, 1034.0000, 1034.0000}};
     for(int i = 0; i < k; i++)
     {
         int number_of_roots = kvadratka(data[i][0], data[i][1], data[i][2], &x1, &x2);
@@ -154,29 +149,26 @@ int main()
     if(TEST)
     {
         test();
+        return 0;
     }
-    else
+    puts("type a b c");
+    assert(scanf("%f %f %f", &a, &b, &c) == 3);
+    int number_of_roots = kvadratka(a, b, c, &x1, &x2);
+    if(number_of_roots != 8)
     {
-        puts("type a b c");
-        assert(scanf("%f %f %f", &a, &b, &c) == 3);
-        int number_of_roots = kvadratka(a, b, c, &x1, &x2);
-        if(number_of_roots != 8)
+        printf("number of roots: %d\n", number_of_roots);
+        if(number_of_roots == 1)
         {
-            printf("number of roots: %d\n", number_of_roots);
-            if(number_of_roots == 1)
-            {
-                printf("root: %.4f\n", x1);
-            }
-            if(number_of_roots == 2)
-            {
-                printf("roots: %.4f %.4f\n", x1, x2);
-            }
+            printf("root: %.4f\n", x1);
         }
-        else
+        if(number_of_roots == 2)
         {
-            puts("roots belongs to R");
+            printf("roots: %.4f %.4f\n", x1, x2);
         }
         return 0;
     }
+    puts("roots belongs to R");
+    return 0;
 }
+
 
