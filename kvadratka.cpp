@@ -7,6 +7,8 @@
 #define NUMBER_OF_TESTS 9
 #define PRECISION 0.0001
 
+enum rootnum {NO_ROOT, ONE_ROOT, TWO_ROOTS, INFINITE_ROOTS = 8};
+
 /*!
 \brief Сравнивает 2 float
 \param x1,x2 числа для сравнения
@@ -83,11 +85,11 @@ int kvadratka(float a, float b, float c, float* x1, float* x2)
     *x1 = 0;
     *x2 = 0;
     if(floatcmp(a, 0) == 0 && floatcmp(b, 0) == 0)
-        return (floatcmp(c, 0) == 0) ? 8 : 0;
+        return (floatcmp(c, 0) == 0) ? INFINITE_ROOTS : NO_ROOT;
     if(floatcmp(a, 0) == 0)
     {
         *x1 = schet_linear(b, c);
-        return 1;
+        return ONE_ROOT;
     }
     return schet_kvadr(a, b, c, x1, x2);
 }
@@ -140,12 +142,12 @@ int main()
         return 0;
     }
     int number_of_roots = kvadratka(a, b, c, &x1, &x2);
-    if(number_of_roots != 8)
+    if(number_of_roots != INFINITE_ROOTS)
     {
         printf("number of roots: %d\n", number_of_roots);
-        if(number_of_roots == 1)
+        if(number_of_roots == ONE_ROOT)
             printf("root: %.4f\n", x1);
-        if(number_of_roots == 2)
+        if(number_of_roots == TWO_ROOTS)
             printf("roots: %.4f %.4f\n", x1, x2);
         return 0;
     }
