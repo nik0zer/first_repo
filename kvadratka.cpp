@@ -4,7 +4,7 @@
 #include <string.h>
 
 #define TEST true
-#define D 0.0001
+#define PRECISION 0.0001
 
 /*!
 Находит дискриминант от переданных коэффициентов
@@ -24,15 +24,15 @@ float discr(float a, float b, float c)
 int check(float a, float b, float c)
 {
     float d = discr(a, b, c);
-    if(d < -D)
+    if(d < -PRECISION)
     {
         return 0;
     }
-    if(abs(d) < D)
+    if(abs(d) < PRECISION)
     {
         return 1;
     }
-    if(d > D)
+    if(d > PRECISION)
     {
         return 2;
     }
@@ -45,7 +45,7 @@ int check(float a, float b, float c)
 */
 float schet_linear(float b, float c)
 {
-    if(abs(c) < D)
+    if(abs(c) < PRECISION)
     {
         return float(0);
     }
@@ -83,19 +83,19 @@ int kvadratka(float a, float b, float c, float* x1, float* x2)
     assert(x1 != NULL);
     assert(x2 != NULL);
     assert(x2 != x1);
-    if(abs(a) < D && abs(b) < D && abs(c) < D)
+    if(abs(a) < PRECISION && abs(b) < PRECISION && abs(c) < PRECISION)
     {
         return 8;
     }
     else
     {
-        if(abs(a) < D && abs(b) < D)
+        if(abs(a) < PRECISION && abs(b) < PRECISION)
         {
             return 0;
         }
         else
         {
-            if(abs(a) < D)
+            if(abs(a) < PRECISION)
             {
                 *x1 = schet_linear(b, c);
                 return 1;
@@ -155,6 +155,7 @@ void test()
 */
 int main()
 {
+    bool flag = 0;
     float a = 0, b = 0, c = 0, x1 = 0, x2 = 0;
     char str[20];
     if(TEST)
@@ -164,7 +165,7 @@ int main()
     else
     {
         puts("type a b c");
-        scanf("%f %f %f", &a, &b, &c);
+        assert(scanf("%f %f %f", &a, &b, &c) == 3);
         int number_of_roots = kvadratka(a, b, c, &x1, &x2);
         if(number_of_roots != 8)
         {
