@@ -9,6 +9,12 @@
 
 enum rootnum {NO_ROOT, ONE_ROOT, TWO_ROOTS, INFINITE_ROOTS = 8};
 
+struct test_data
+{
+    float data[3];
+    float data_check[3];
+};
+
 /*!
 \brief Сравнивает 2 float
 \param x1,x2 числа для сравнения
@@ -82,6 +88,9 @@ int kvadratka(float a, float b, float c, float* x1, float* x2)
     assert(x1 != NULL);
     assert(x2 != NULL);
     assert(x2 != x1);
+    assert(!isnan(a));
+    assert(!isnan(b));
+    assert(!isnan(c));
     *x1 = 0;
     *x2 = 0;
     if(floatcmp(a, 0) == 0 && floatcmp(b, 0) == 0)
@@ -102,21 +111,61 @@ int kvadratka(float a, float b, float c, float* x1, float* x2)
 void test()
 {
     float x1 = 0, x2 = 0;
-    float data[NUMBER_OF_TESTS][3]= {{    1,      4,      -3}, {1,       0,       -4}, {0,     0,       0},
-                                     {    0,      4,       5}, {0,       0,        5}, {2,     3,       7},
-                                     {15246, 120536, -645721}, {0, 1154526, -1125452}, {1, -2068, 1069156}};
-    float data_check[NUMBER_OF_TESTS][3] = {{2,  -4.6458, 0.6458}, {2, -2.0000, 2.0000}, {8,         0,         0},
-                                            {1,  -1.2500,      0}, {0,       0,      0}, {0,         0,         0},
-                                            {2, -11.5675, 3.6614}, {1,  0.9748,      0}, {1, 1034.0000, 1034.0000}};
+    test_data test_data_array[NUMBER_OF_TESTS];
+    test_data_array[0] =
+    {
+        {    1,      4,      -3},
+        {2,    -4.6458,  0.6458}
+    };
+    test_data_array[1] =
+    {
+        {1,       0,       -4},
+        {2, -2.0000,   2.0000}
+    };
+    test_data_array[2] =
+    {
+        {0,     0,       0},
+        {8,     0,       0}
+    };
+    test_data_array[3] =
+    {
+        {0,      4,       5},
+        {1,    -1.2500,   0}
+    };
+    test_data_array[4] =
+    {
+        {0,       0,        5},
+        {0,       0,        0}
+    };
+    test_data_array[5] =
+    {
+        {2,         3,         7},
+        {0,         0,         0}
+    };
+    test_data_array[6] =
+    {
+        {15246,    120536, -645721},
+        {    2,  -11.5675,  3.6614}
+    };
+    test_data_array[7] =
+    {
+        {0, 1154526, -1125452},
+        {1,  0.9748,        0}
+    };
+    test_data_array[8] =
+    {
+        {1,     -2068,   1069156},
+        {1, 1034.0000, 1034.0000}
+    };
     for(int i = 0; i < NUMBER_OF_TESTS; i++)
     {
-        int number_of_roots = kvadratka(data[i][0], data[i][1], data[i][2], &x1, &x2);
-        if(number_of_roots == int(data_check[i][0]) && floatcmp(x1, data_check[i][1]) == 0 && floatcmp(x2, data_check[i][2]) == 0)
+        int number_of_roots = kvadratka(test_data_array[i].data[0], test_data_array[i].data[1], test_data_array[i].data[2], &x1, &x2);
+        if(number_of_roots == int(test_data_array[i].data_check[0]) && floatcmp(x1, test_data_array[i].data_check[1]) == 0 && floatcmp(x2, test_data_array[i].data_check[2]) == 0)
             printf("test %i OK\n", i + 1);
         else
         {
             printf("test %i FAILED\n", i + 1);
-            printf("right output: %i %.4f %.4f\n", int(data_check[i][0]), data_check[i][1], data_check[i][2]);
+            printf("right output: %i %.4f %.4f\n", int(test_data_array[i].data_check[0]), test_data_array[i].data_check[1], test_data_array[i].data_check[2]);
             printf("program output: %i %.4f %.4f\n", number_of_roots, x1, x2);
         }
     }
@@ -129,7 +178,7 @@ void test()
 */
 int main()
 {
-    float a = 0, b = 0, c = 0, x1 = 0, x2 = 0;
+    float a = NAN, b = NAN, c = NAN, x1 = NAN, x2 = NAN;
     if(TEST)
     {
         test();
