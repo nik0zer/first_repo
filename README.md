@@ -1,4 +1,5 @@
 # kvadratka - код для решения квадратного уравнения 
+Программа для решения квадратного уравнения, получилась в результате выполнения задачи написать программу для решеия квадратного уравния 
 ____
 ## main.cpp
 main.cpp - основной файл, содержащий фукцию main, в которой реализован ввод коэффициентов и вывод итоговыъ значаний, а также при `#define TEST true` запускается тестирующая функция:
@@ -63,14 +64,16 @@ test_data test_data_array[NUMBER_OF_TESTS] =
 for(int i = 0; i < NUMBER_OF_TESTS; i++)
     {
         int number_of_roots = kvadratka(test_data_array[i].data[0], test_data_array[i].data[1], test_data_array[i].data[2], test_data_array[i].x1, test_data_array[i].x2);
-        if(number_of_roots == int(test_data_array[i].data_check[0]) && number_of_roots == 3 && floatcmp(float(errno), test_data_array[i].data_check[3]) == 0)
+        if(number_of_roots == int(test_data_array[i].data_check[0]) && number_of_roots == 3
+           && !floatcmp(float(errno), test_data_array[i].data_check[3]))
         {
             printf("test %i OK\n", i + 1);
             printf("ERROR %d\n", errno);
         }
         else
         {
-            if(number_of_roots == int(test_data_array[i].data_check[0]) && floatcmp(x1, test_data_array[i].data_check[1]) == 0 && floatcmp(x2, test_data_array[i].data_check[2]) == 0 && floatcmp(float(errno), test_data_array[i].data_check[3]) == 0)
+            if(number_of_roots == int(test_data_array[i].data_check[0]) && !floatcmp(x1, test_data_array[i].data_check[1])
+               && !floatcmp(x2, test_data_array[i].data_check[2]) && !floatcmp(float(errno), test_data_array[i].data_check[3]))
                 printf("test %i OK\n", i + 1);
             else
             {
@@ -154,9 +157,9 @@ int kvadratka(float a, float b, float c, float* x1, float* x2)
     }
     *x1 = 0;
     *x2 = 0;
-    if(floatcmp(a, 0) == 0 && floatcmp(b, 0) == 0)
-        return (floatcmp(c, 0) == 0) ? INFINITE_ROOTS : NO_ROOT;
-    if(floatcmp(a, 0) == 0)
+    if(!floatcmp(a, 0) && !floatcmp(b, 0))
+        return (!floatcmp(c, 0)) ? INFINITE_ROOTS : NO_ROOT;
+    if(!floatcmp(a, 0))
     {
         *x1 = schet_linear(b, c);
         return ONE_ROOT;
