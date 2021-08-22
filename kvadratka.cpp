@@ -56,7 +56,7 @@ int schet_kvadr(float a, float b, float c, float* x1, float* x2)
 {
     if((abs(FLT_MAX / b) < abs(b)) || (abs((FLT_MAX / 4) / a) < abs(c)))
     {
-        Errno = NULL_POINTER;
+        Errno = VARIABLE_OVERFLOW;
         return ERROR_OCCUR;
     }
     float d = (b * b) - (4 * a * c);
@@ -196,6 +196,3 @@ int main()
     puts("roots belongs to R");
     return 0;
 }
-
-
-
