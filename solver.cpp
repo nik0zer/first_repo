@@ -31,7 +31,7 @@ int floatcmp(float x1, float x2)
 */
 float schet_linear(float b, float c)
 {
-    if(floatcmp(c, 0) == 0)
+    if(!floatcmp(c, 0))
         return float(0);
     else
         return -c / b;
@@ -90,9 +90,9 @@ int kvadratka(float a, float b, float c, float* x1, float* x2)
     }
     *x1 = 0;
     *x2 = 0;
-    if(floatcmp(a, 0) == 0 && floatcmp(b, 0) == 0)
-        return (floatcmp(c, 0) == 0) ? INFINITE_ROOTS : NO_ROOT;
-    if(floatcmp(a, 0) == 0)
+    if(!floatcmp(a, 0) && !floatcmp(b, 0))
+        return (!floatcmp(c, 0)) ? INFINITE_ROOTS : NO_ROOT;
+    if(!floatcmp(a, 0))
     {
         *x1 = schet_linear(b, c);
         return ONE_ROOT;
