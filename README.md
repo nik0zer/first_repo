@@ -132,3 +132,35 @@ int schet_kvadr(float a, float b, float c, float* x1, float* x2)
     return floatcmp(d, 0) + 1;
 }
 ```
+### kvadratka
+функция решающая уравнение от трех коэффициентов разбивая его на различные случаи в зависимости от входных данных квадратное, линейное и т.д и затем вызывая разные функции в зависимости от вида уравнения(`schet_kvadr`, `schet_linear`), выдает корни в переданные по указателям переменные, возвращает количество корней уравнения, возвращает 3 в случае ошибки и 8 в случае бесконечного количества корней:
+```cpp
+int kvadratka(float a, float b, float c, float* x1, float* x2)
+{
+    if(x1 == NULL || x2 == NULL)
+    {
+        errno = NULL_POINTER;
+        return ERROR_OCCUR;
+    }
+    if(x2 == x1)
+    {
+        errno = EQUAL_POINTERS;
+        return ERROR_OCCUR;
+    }
+    if(isnan(a) || isnan(b) || isnan(c))
+    {
+        errno = NAN_INPUT;
+        return ERROR_OCCUR;
+    }
+    *x1 = 0;
+    *x2 = 0;
+    if(floatcmp(a, 0) == 0 && floatcmp(b, 0) == 0)
+        return (floatcmp(c, 0) == 0) ? INFINITE_ROOTS : NO_ROOT;
+    if(floatcmp(a, 0) == 0)
+    {
+        *x1 = schet_linear(b, c);
+        return ONE_ROOT;
+    }
+    return schet_kvadr(a, b, c, x1, x2);
+}
+```
