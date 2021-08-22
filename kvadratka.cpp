@@ -60,10 +60,11 @@ int schet_kvadr(float a, float b, float c, float* x1, float* x2)
         return ERROR_OCCUR;
     }
     float d = (b * b) - (4 * a * c);
-    if(floatcmp(d, 0) == -1)
+    if(d < 0)
     {
         *x1 = 0;
         *x2 = 0;
+        return 0;
     }
     float change_part = sqrt(d) / (2 * a);
     float const_part = -b / (2 * a);
@@ -195,5 +196,6 @@ int main()
     puts("roots belongs to R");
     return 0;
 }
+
 
 
