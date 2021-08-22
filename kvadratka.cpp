@@ -5,17 +5,19 @@
 
 
 #define TEST true
-#define NUMBER_OF_TESTS 11
+#define NUMBER_OF_TESTS 16
 #define PRECISION 0.0001
 
 enum rootnum {NO_ROOT, ONE_ROOT, TWO_ROOTS, ERROR_OCCUR, INFINITE_ROOTS = 8};
-enum errors {NO_ERRORS, VARIABLE_OVERFLOW};
+enum errors {NO_ERRORS, VARIABLE_OVERFLOW, NULL_POINTER, EQUAL_POINTERS, NAN_INPUT};
 int Errno = 0;
 
 struct test_data
 {
     float data[3];
     float data_check[3];
+    float* x1;
+    float* x2;
 };
 
 /*!
@@ -52,14 +54,9 @@ float schet_linear(float b, float c)
 */
 int schet_kvadr(float a, float b, float c, float* x1, float* x2)
 {
-    assert(x1 != NULL);
-    assert(x2 != NULL);
-    assert(x2 != x1);
     if((abs(FLT_MAX / b) < abs(b)) || (abs((FLT_MAX / 4) / a) < abs(c)))
     {
-        *x1 = 0;
-        *x2 = 0;
-        Errno = VARIABLE_OVERFLOW;
+        Errno = NULL_POINTER;
         return ERROR_OCCUR;
     }
     float d = (b * b) - (4 * a * c);
@@ -85,12 +82,21 @@ int schet_kvadr(float a, float b, float c, float* x1, float* x2)
 */
 int kvadratka(float a, float b, float c, float* x1, float* x2)
 {
-    assert(x1 != NULL);
-    assert(x2 != NULL);
-    assert(x2 != x1);
-    assert(!isnan(a));
-    assert(!isnan(b));
-    assert(!isnan(c));
+    if(x1 == NULL || x2 == NULL)
+    {
+        Errno = NULL_POINTER;
+        return ERROR_OCCUR;
+    }
+    if(x2 == x1)
+    {
+        Errno = EQUAL_POINTERS;
+        return ERROR_OCCUR;
+    }
+    if(isnan(a) || isnan(b) || isnan(c))
+    {
+        Errno = NAN_INPUT;
+        return ERROR_OCCUR;
+    }
     *x1 = 0;
     *x2 = 0;
     if(floatcmp(a, 0) == 0 && floatcmp(b, 0) == 0)
@@ -113,28 +119,41 @@ void test()
     float x1 = 0, x2 = 0;
     test_data test_data_array[NUMBER_OF_TESTS] =
     {
-        {{    1,                  4,                   -3},    {2,    -4.6458,    0.6458}},
-        {{    1,                  0,                   -4},    {2,    -2.0000,    2.0000}},
-        {{    0,                  0,                    0},    {8,          0,         0}},
-        {{    0,                  4,                    5},    {1,    -1.2500,         0}},
-        {{    0,                  0,                    5},    {0,          0,         0}},
-        {{    2,                  3,                    7},    {0,          0,         0}},
-        {{15246,             120536,              -645721},    {2,   -11.5675,    3.6614}},
-        {{    0,            1154526,             -1125452},    {1,     0.9748,         0}},
-        {{    1,              -2068,              1069156},    {1,  1034.0000, 1034.0000}},
-        {{    1,  3.4*pow(10.0, 20),              1231031},    {3,          0,         0}},
-        {{    1,                 10,   -3.4*pow(10.0, 38)},    {3,          0,         0}},
+        {{    1,                  4,                   -3},    {2,    -4.6458,    0.6458},    &x1,    &x2},
+        {{    1,                  0,                   -4},    {2,    -2.0000,    2.0000},    &x1,    &x2},
+        {{    0,                  0,                    0},    {8,          0,         0},    &x1,    &x2},
+        {{    0,                  4,                    5},    {1,    -1.2500,         0},    &x1,    &x2},
+        {{    0,                  0,                    5},    {0,          0,         0},    &x1,    &x2},
+        {{    2,                  3,                    7},    {0,          0,         0},    &x1,    &x2},
+        {{15246,             120536,              -645721},    {2,   -11.5675,    3.6614},    &x1,    &x2},
+        {{    0,            1154526,             -1125452},    {1,     0.9748,         0},    &x1,    &x2},
+        {{    1,              -2068,              1069156},    {1,  1034.0000, 1034.0000},    &x1,    &x2},
+        {{    1,  3.4*pow(10.0, 20),              1231031},    {3,          0,         0},    &x1,    &x2},
+        {{    1,                 10,   -3.4*pow(10.0, 38)},    {3,          0,         0},    &x1,    &x2},
+        {{    0,                  0,                    0},    {3,          0,         0},   NULL,    &x2},
+        {{    0,                  0,                    0},    {3,          0,         0},    &x1,   NULL},
+        {{    0,                  0,                    0},    {3,          0,         0},    &x1,    &x1},
+        {{  NAN,                  0,                    0},    {3,          0,         0},    &x1,    &x2},
+        {{    0,                  0,                  NAN},    {3,          0,         0},    &x1,    &x2},
     };
     for(int i = 0; i < NUMBER_OF_TESTS; i++)
     {
-        int number_of_roots = kvadratka(test_data_array[i].data[0], test_data_array[i].data[1], test_data_array[i].data[2], &x1, &x2);
-        if(number_of_roots == int(test_data_array[i].data_check[0]) && floatcmp(x1, test_data_array[i].data_check[1]) == 0 && floatcmp(x2, test_data_array[i].data_check[2]) == 0)
+        int number_of_roots = kvadratka(test_data_array[i].data[0], test_data_array[i].data[1], test_data_array[i].data[2], test_data_array[i].x1, test_data_array[i].x2);
+        if((number_of_roots == int(test_data_array[i].data_check[0]) && number_of_roots == 3))
+        {
             printf("test %i OK\n", i + 1);
+            printf("ERROR %d\n", Errno);
+        }
         else
         {
-            printf("test %i FAILED\n", i + 1);
-            printf("right output: %i %.4f %.4f\n", int(test_data_array[i].data_check[0]), test_data_array[i].data_check[1], test_data_array[i].data_check[2]);
-            printf("program output: %i %.4f %.4f\n", number_of_roots, x1, x2);
+            if(number_of_roots == int(test_data_array[i].data_check[0]) && floatcmp(x1, test_data_array[i].data_check[1]) == 0 && floatcmp(x2, test_data_array[i].data_check[2]) == 0)
+                printf("test %i OK\n", i + 1);
+            else
+            {
+                printf("test %i FAILED\n", i + 1);
+                printf("right output: %i %.4f %.4f\n", int(test_data_array[i].data_check[0]), test_data_array[i].data_check[1], test_data_array[i].data_check[2]);
+                printf("program output: %i %.4f %.4f\n", number_of_roots, x1, x2);
+            }
         }
     }
 }
@@ -159,6 +178,11 @@ int main()
         return 0;
     }
     int number_of_roots = kvadratka(a, b, c, &x1, &x2);
+    if(Errno != 0)
+    {
+        printf("ERROR: %d\n", Errno);
+        return Errno;
+    }
     if(number_of_roots != INFINITE_ROOTS)
     {
         printf("number of roots: %d\n", number_of_roots);
@@ -171,4 +195,5 @@ int main()
     puts("roots belongs to R");
     return 0;
 }
+
 
