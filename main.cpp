@@ -49,14 +49,16 @@ void test()
     for(int i = 0; i < NUMBER_OF_TESTS; i++)
     {
         int number_of_roots = kvadratka(test_data_array[i].data[0], test_data_array[i].data[1], test_data_array[i].data[2], test_data_array[i].x1, test_data_array[i].x2);
-        if(number_of_roots == int(test_data_array[i].data_check[0]) && number_of_roots == 3 && floatcmp(float(errno), test_data_array[i].data_check[3]) == 0)
+        if(number_of_roots == int(test_data_array[i].data_check[0]) && number_of_roots == 3
+           && !floatcmp(float(errno), test_data_array[i].data_check[3]))
         {
             printf("test %i OK\n", i + 1);
             printf("ERROR %d\n", errno);
         }
         else
         {
-            if(number_of_roots == int(test_data_array[i].data_check[0]) && floatcmp(x1, test_data_array[i].data_check[1]) == 0 && floatcmp(x2, test_data_array[i].data_check[2]) == 0 && floatcmp(float(errno), test_data_array[i].data_check[3]) == 0)
+            if(number_of_roots == int(test_data_array[i].data_check[0]) && !floatcmp(x1, test_data_array[i].data_check[1])
+               && !floatcmp(x2, test_data_array[i].data_check[2]) && !floatcmp(float(errno), test_data_array[i].data_check[3]))
                 printf("test %i OK\n", i + 1);
             else
             {
