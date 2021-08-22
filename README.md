@@ -58,7 +58,7 @@ test_data test_data_array[NUMBER_OF_TESTS] =
         {{    0,                  0,                  NAN},    {   ERROR_OCCUR,          0,         0,         NAN_INPUT},    &x1,    &x2},
     };
 ```
-и сам механизм тестирования, в котором запускается функция kvadratka от данных из test_data_array, а затем вывод сравнивается с ответами из test_data_array и в консоль выводится информация о прохождении теста:
+и сам механизм тестирования, в котором запускается функция `kvadratka` от данных из `test_data_array`, а затем вывод сравнивается с ответами из `test_data_array` и в консоль выводится информация о прохождении теста:
 ```cpp
 for(int i = 0; i < NUMBER_OF_TESTS; i++)
     {
@@ -80,4 +80,55 @@ for(int i = 0; i < NUMBER_OF_TESTS; i++)
             }
         }
     }
+```
+## solver.h
+solver.h - файл, который содержит заголовки фукций из solver.cpp
+## solver.cpp
+solver.cpp - файл с функциями ответственными за само решение квадратного уравнения
+### floatcmp
+функция сравнения двух float, выводит 0 при равенстве, 1 если больше первое число, -1 если второе:
+```cpp
+int floatcmp(float x1, float x2)
+{
+    if((x1 - x2) > PRECISION)
+        return 1;
+    if((x1 - x2) < -PRECISION)
+        return -1;
+    return 0;
+}
+```
+### schet_linear
+решает линейное уравнение от 2 коэффициентов, возвращает корень уравнения:
+```cpp
+float schet_linear(float b, float c)
+{
+    if(floatcmp(c, 0) == 0)
+        return float(0);
+    else
+        return -c / b;
+}
+```
+### schet_kvadr
+Находит корни квадратного уравнения от переданных коэффициентов, выдает их в переданные по указателям переменные, возвращает количество корней уравнения, возвращает 3 в случае ошибки и 8 в случае бесконечного количества корней:
+```cpp
+int schet_kvadr(float a, float b, float c, float* x1, float* x2)
+{
+    if((abs(FLT_MAX / b) < abs(b)) || (abs((FLT_MAX / 4) / a) < abs(c)))
+    {
+        errno = VARIABLE_OVERFLOW;
+        return ERROR_OCCUR;
+    }
+    float d = (b * b) - (4 * a * c);
+    if(d < 0)
+    {
+        *x1 = 0;
+        *x2 = 0;
+        return 0;
+    }
+    float change_part = sqrt(d) / (2 * a);
+    float const_part = -b / (2 * a);
+    *x1 = -change_part + const_part;
+    *x2 =  change_part + const_part;
+    return floatcmp(d, 0) + 1;
+}
 ```
