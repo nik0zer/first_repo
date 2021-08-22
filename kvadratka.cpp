@@ -2,7 +2,7 @@
 #include <math.h>
 #include <assert.h>
 #include <float.h>
-
+#include <errno.h>
 
 #define TEST true
 #define NUMBER_OF_TESTS 16
@@ -10,7 +10,7 @@
 
 enum rootnum {NO_ROOT, ONE_ROOT, TWO_ROOTS, ERROR_OCCUR, INFINITE_ROOTS = 8};
 enum errors {NO_ERRORS, VARIABLE_OVERFLOW, NULL_POINTER, EQUAL_POINTERS, NAN_INPUT};
-int Errno = 0;
+
 
 struct test_data
 {
@@ -56,7 +56,7 @@ int schet_kvadr(float a, float b, float c, float* x1, float* x2)
 {
     if((abs(FLT_MAX / b) < abs(b)) || (abs((FLT_MAX / 4) / a) < abs(c)))
     {
-        Errno = VARIABLE_OVERFLOW;
+        errno = VARIABLE_OVERFLOW;
         return ERROR_OCCUR;
     }
     float d = (b * b) - (4 * a * c);
@@ -85,17 +85,17 @@ int kvadratka(float a, float b, float c, float* x1, float* x2)
 {
     if(x1 == NULL || x2 == NULL)
     {
-        Errno = NULL_POINTER;
+        errno = NULL_POINTER;
         return ERROR_OCCUR;
     }
     if(x2 == x1)
     {
-        Errno = EQUAL_POINTERS;
+        errno = EQUAL_POINTERS;
         return ERROR_OCCUR;
     }
     if(isnan(a) || isnan(b) || isnan(c))
     {
-        Errno = NAN_INPUT;
+        errno = NAN_INPUT;
         return ERROR_OCCUR;
     }
     *x1 = 0;
@@ -120,22 +120,22 @@ void test()
     float x1 = 0, x2 = 0;
     test_data test_data_array[NUMBER_OF_TESTS] =
     {
-        {{    1,                  4,                   -3},    {2,    -4.6458,    0.6458},    &x1,    &x2},
-        {{    1,                  0,                   -4},    {2,    -2.0000,    2.0000},    &x1,    &x2},
-        {{    0,                  0,                    0},    {8,          0,         0},    &x1,    &x2},
-        {{    0,                  4,                    5},    {1,    -1.2500,         0},    &x1,    &x2},
-        {{    0,                  0,                    5},    {0,          0,         0},    &x1,    &x2},
-        {{    2,                  3,                    7},    {0,          0,         0},    &x1,    &x2},
-        {{15246,             120536,              -645721},    {2,   -11.5675,    3.6614},    &x1,    &x2},
-        {{    0,            1154526,             -1125452},    {1,     0.9748,         0},    &x1,    &x2},
-        {{    1,              -2068,              1069156},    {1,  1034.0000, 1034.0000},    &x1,    &x2},
-        {{    1,  3.4*pow(10.0, 20),              1231031},    {3,          0,         0},    &x1,    &x2},
-        {{    1,                 10,   -3.4*pow(10.0, 38)},    {3,          0,         0},    &x1,    &x2},
-        {{    0,                  0,                    0},    {3,          0,         0},   NULL,    &x2},
-        {{    0,                  0,                    0},    {3,          0,         0},    &x1,   NULL},
-        {{    0,                  0,                    0},    {3,          0,         0},    &x1,    &x1},
-        {{  NAN,                  0,                    0},    {3,          0,         0},    &x1,    &x2},
-        {{    0,                  0,                  NAN},    {3,          0,         0},    &x1,    &x2},
+        {{    1,                  4,                   -3},    {     TWO_ROOTS,    -4.6458,    0.6458},    &x1,    &x2},
+        {{    1,                  0,                   -4},    {     TWO_ROOTS,    -2.0000,    2.0000},    &x1,    &x2},
+        {{    0,                  0,                    0},    {INFINITE_ROOTS,          0,         0},    &x1,    &x2},
+        {{    0,                  4,                    5},    {      ONE_ROOT,    -1.2500,         0},    &x1,    &x2},
+        {{    0,                  0,                    5},    {       NO_ROOT,          0,         0},    &x1,    &x2},
+        {{    2,                  3,                    7},    {       NO_ROOT,          0,         0},    &x1,    &x2},
+        {{15246,             120536,              -645721},    {     TWO_ROOTS,   -11.5675,    3.6614},    &x1,    &x2},
+        {{    0,            1154526,             -1125452},    {      ONE_ROOT,     0.9748,         0},    &x1,    &x2},
+        {{    1,              -2068,              1069156},    {      ONE_ROOT,  1034.0000, 1034.0000},    &x1,    &x2},
+        {{    1,  3.4*pow(10.0, 20),              1231031},    {   ERROR_OCCUR,          0,         0},    &x1,    &x2},
+        {{    1,                 10,   -3.4*pow(10.0, 38)},    {   ERROR_OCCUR,          0,         0},    &x1,    &x2},
+        {{    0,                  0,                    0},    {   ERROR_OCCUR,          0,         0},   NULL,    &x2},
+        {{    0,                  0,                    0},    {   ERROR_OCCUR,          0,         0},    &x1,   NULL},
+        {{    0,                  0,                    0},    {   ERROR_OCCUR,          0,         0},    &x1,    &x1},
+        {{  NAN,                  0,                    0},    {   ERROR_OCCUR,          0,         0},    &x1,    &x2},
+        {{    0,                  0,                  NAN},    {   ERROR_OCCUR,          0,         0},    &x1,    &x2},
     };
     for(int i = 0; i < NUMBER_OF_TESTS; i++)
     {
@@ -143,7 +143,7 @@ void test()
         if((number_of_roots == int(test_data_array[i].data_check[0]) && number_of_roots == 3))
         {
             printf("test %i OK\n", i + 1);
-            printf("ERROR %d\n", Errno);
+            printf("ERROR %d\n", errno);
         }
         else
         {
@@ -179,10 +179,10 @@ int main()
         return 0;
     }
     int number_of_roots = kvadratka(a, b, c, &x1, &x2);
-    if(Errno != 0)
+    if(errno != 0)
     {
-        printf("ERROR: %d\n", Errno);
-        return Errno;
+        printf("ERROR: %d\n", errno);
+        return errno;
     }
     if(number_of_roots != INFINITE_ROOTS)
     {
