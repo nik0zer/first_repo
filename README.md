@@ -57,4 +57,27 @@ test_data test_data_array[NUMBER_OF_TESTS] =
         {{  NAN,                  0,                    0},    {   ERROR_OCCUR,          0,         0,         NAN_INPUT},    &x1,    &x2},
         {{    0,                  0,                  NAN},    {   ERROR_OCCUR,          0,         0,         NAN_INPUT},    &x1,    &x2},
     };
-    ```
+```
+и сам механизм тестирования, в котором запускается функция kvadratka от данных из test_data_array, а затем вывод сравнивается с ответами из test_data_array и в консоль выводится информация о прохождении теста:
+```cpp
+for(int i = 0; i < NUMBER_OF_TESTS; i++)
+    {
+        int number_of_roots = kvadratka(test_data_array[i].data[0], test_data_array[i].data[1], test_data_array[i].data[2], test_data_array[i].x1, test_data_array[i].x2);
+        if(number_of_roots == int(test_data_array[i].data_check[0]) && number_of_roots == 3 && floatcmp(float(errno), test_data_array[i].data_check[3]) == 0)
+        {
+            printf("test %i OK\n", i + 1);
+            printf("ERROR %d\n", errno);
+        }
+        else
+        {
+            if(number_of_roots == int(test_data_array[i].data_check[0]) && floatcmp(x1, test_data_array[i].data_check[1]) == 0 && floatcmp(x2, test_data_array[i].data_check[2]) == 0 && floatcmp(float(errno), test_data_array[i].data_check[3]) == 0)
+                printf("test %i OK\n", i + 1);
+            else
+            {
+                printf("test %i FAILED\n", i + 1);
+                printf("right output: %i %.4f %.4f\n", int(test_data_array[i].data_check[0]), test_data_array[i].data_check[1], test_data_array[i].data_check[2]);
+                printf("program output: %i %.4f %.4f\n", number_of_roots, x1, x2);
+            }
+        }
+    }
+```
