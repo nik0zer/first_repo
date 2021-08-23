@@ -7,11 +7,10 @@ main.cpp - основной файл, содержащий фукцию main, в
 int main()
 {
     float a = NAN, b = NAN, c = NAN, x1 = NAN, x2 = NAN;
-    if(TEST)
-    {
-        test();
-        return 0;
-    }
+#if TEST
+    test();
+    return 0;
+#else
     puts("type a b c");
     if(scanf("%f %f %f", &a, &b, &c) != 3)
     {
@@ -35,11 +34,12 @@ int main()
     }
     puts("roots belongs to R");
     return 0;
+#endif // TEST
 }
 ```
 также файл содержит фукцию test, в которой хранится массив структур с данными для тестирования и верными ответами:
 ```cpp
-test_data test_data_array[NUMBER_OF_TESTS] =
+test_data test_data_array[] =
     {
         {{    1,                  4,                   -3},    {     TWO_ROOTS,    -4.6458,    0.6458,         NO_ERRORS},    &x1,    &x2},
         {{    1,                  0,                   -4},    {     TWO_ROOTS,    -2.0000,    2.0000,         NO_ERRORS},    &x1,    &x2},
@@ -62,7 +62,7 @@ test_data test_data_array[NUMBER_OF_TESTS] =
 ```
 и сам механизм тестирования, в котором запускается функция `kvadratka` от данных из `test_data_array`, а затем вывод сравнивается с ответами из `test_data_array` и в консоль выводится информация о прохождении теста:
 ```cpp
-for(int i = 0; i < NUMBER_OF_TESTS; i++)
+for(int i = 0; i < (sizeof(test_data_array) / sizeof(test_data_array[0])); i++)
     {
         int number_of_roots = kvadratka(test_data_array[i].data[0],
                                         test_data_array[i].data[1],
@@ -70,7 +70,7 @@ for(int i = 0; i < NUMBER_OF_TESTS; i++)
                                         test_data_array[i].x1,
                                         test_data_array[i].x2);
         if(number_of_roots == int(test_data_array[i].data_check[0]) && number_of_roots == 3
-           && !floatcmp(float(errno), test_data_array[i].data_check[3]))
+                && !floatcmp(float(errno), test_data_array[i].data_check[3]))
         {
             printf("test %i OK\n", i + 1);
             printf("ERROR %d\n", errno);
@@ -78,9 +78,9 @@ for(int i = 0; i < NUMBER_OF_TESTS; i++)
         else
         {
             if(number_of_roots == int(test_data_array[i].data_check[0])
-               && !floatcmp(x1, test_data_array[i].data_check[1])
-               && !floatcmp(x2, test_data_array[i].data_check[2])
-               && !floatcmp(float(errno), test_data_array[i].data_check[3]))
+                    && !floatcmp(x1, test_data_array[i].data_check[1])
+                    && !floatcmp(x2, test_data_array[i].data_check[2])
+                    && !floatcmp(float(errno), test_data_array[i].data_check[3]))
                 printf("test %i OK\n", i + 1);
             else
             {
