@@ -124,7 +124,7 @@ float schet_linear(float b, float c)
 ```cpp
 int schet_kvadr(float a, float b, float c, float* x1, float* x2)
 {
-    if((abs(FLT_MAX / b) < abs(b)) || (abs((FLT_MAX / 4) / a) < abs(c)))
+    if((fabs(FLT_MAX / b) < fabs(b)) || (fabs((FLT_MAX / 4) / a) < fabs(c)))
     {
         errno = VARIABLE_OVERFLOW;
         return ERROR_OCCUR;
