@@ -6,7 +6,7 @@
 #include "solver.h"
 
 #define TEST true
-#define NUMBER_OF_TESTS 16
+#define NUMBER_OF_TESTS 17
 
 struct test_data
 {
@@ -42,6 +42,7 @@ void test()
         {{    0,                  0,                    0},    {   ERROR_OCCUR,          0,         0,    EQUAL_POINTERS},    &x1,    &x1},
         {{  NAN,                  0,                    0},    {   ERROR_OCCUR,          0,         0,         NAN_INPUT},    &x1,    &x2},
         {{    0,                  0,                  NAN},    {   ERROR_OCCUR,          0,         0,         NAN_INPUT},    &x1,    &x2},
+        {{    1,      pow(10.0, 19),   -0.7*pow(10.0, 38)},   {   ERROR_OCCUR,          0,         0, VARIABLE_OVERFLOW},    &x1,    &x2}
     };
     for(int i = 0; i < NUMBER_OF_TESTS; i++)
     {
@@ -112,4 +113,3 @@ int main()
     puts("roots belongs to R");
     return 0;
 }
-
