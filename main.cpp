@@ -50,7 +50,7 @@ void test()
                                         test_data_array[i].data[2],
                                         test_data_array[i].x1,
                                         test_data_array[i].x2);
-        if(number_of_roots == int(test_data_array[i].data_check[0]) && number_of_roots == 3
+        if(number_of_roots == int(test_data_array[i].data_check[0]) && number_of_roots == ERROR_OCCUR
                 && !floatcmp(float(errno), test_data_array[i].data_check[3]))
         {
             printf("test %i OK\n", i + 1);
