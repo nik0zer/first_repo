@@ -57,6 +57,7 @@ test_data test_data_array[NUMBER_OF_TESTS] =
         {{    0,                  0,                    0},    {   ERROR_OCCUR,          0,         0,    EQUAL_POINTERS},    &x1,    &x1},
         {{  NAN,                  0,                    0},    {   ERROR_OCCUR,          0,         0,         NAN_INPUT},    &x1,    &x2},
         {{    0,                  0,                  NAN},    {   ERROR_OCCUR,          0,         0,         NAN_INPUT},    &x1,    &x2},
+        {{    1,      pow(10.0, 19),   -0.7*pow(10.0, 38)},   {   ERROR_OCCUR,          0,         0, VARIABLE_OVERFLOW},    &x1,    &x2}
     };
 ```
 и сам механизм тестирования, в котором запускается функция `kvadratka` от данных из `test_data_array`, а затем вывод сравнивается с ответами из `test_data_array` и в консоль выводится информация о прохождении теста:
@@ -124,7 +125,7 @@ float schet_linear(float b, float c)
 ```cpp
 int schet_kvadr(float a, float b, float c, float* x1, float* x2)
 {
-    if((fabs(FLT_MAX / b) < fabs(b)) || (fabs((FLT_MAX / 4) / a) < fabs(c)))
+    if((fabs(FLT_MAX / b) < fabs(b)) || (fabs((FLT_MAX / 4) / a) < fabs(c)) || (FLT_MAX - b * b) < (- 4 * a * c))
     {
         errno = VARIABLE_OVERFLOW;
         return ERROR_OCCUR;
