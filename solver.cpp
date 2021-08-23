@@ -24,7 +24,7 @@ float schet_linear(float b, float c)
 
 int schet_kvadr(float a, float b, float c, float* x1, float* x2)
 {
-    if((fabs(FLT_MAX / b) < fabs(b)) || (fabs((FLT_MAX / 4) / a) < fabs(c)))
+    if((fabs(FLT_MAX / b) < fabs(b)) || (fabs((FLT_MAX / 4) / a) < fabs(c)) || (FLT_MAX - b * b) < (- 4 * a * c))
     {
         errno = VARIABLE_OVERFLOW;
         return ERROR_OCCUR;
