@@ -7,7 +7,10 @@
 #include <float.h>
 #include <errno.h>
 
-#define PRECISION 0.0001
+const float PRECISION = 0.0001;
+
+enum rootnum {NO_ROOT = 0, ONE_ROOT = 1, TWO_ROOTS = 2, ERROR_OCCUR = 3, INFINITE_ROOTS = 8};
+enum errors {NO_ERRORS = 0, VARIABLE_OVERFLOW = 1, NULL_POINTER = 2, EQUAL_POINTERS = 3, NAN_INPUT = 4};
 
 /*!
 \brief Сравнивает 2 float
