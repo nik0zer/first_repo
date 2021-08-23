@@ -6,7 +6,7 @@ main.cpp - основной файл, содержащий фукцию main, в
 ```cpp
 int main()
 {
-    float a = NAN, b = NAN, c = NAN, x1 = NAN, x2 = NAN;
+    float a = NAN, b = NAN, c = NAN;
 #if TEST
     test();
     return 0;
@@ -17,23 +17,8 @@ int main()
         puts("invalid input");
         return 0;
     }
-    int number_of_roots = kvadratka(a, b, c, &x1, &x2);
-    if(errno != 0)
-    {
-        printf("ERROR: %d\n", errno);
-        return errno;
-    }
-    if(number_of_roots != INFINITE_ROOTS)
-    {
-        printf("number of roots: %d\n", number_of_roots);
-        if(number_of_roots == ONE_ROOT)
-            printf("root: %.4f\n", x1);
-        if(number_of_roots == TWO_ROOTS)
-            printf("roots: %.4f %.4f\n", x1, x2);
-        return 0;
-    }
-    puts("roots belongs to R");
-    return 0;
+    errno = 0;
+    output(a, b, c);
 #endif // TEST
 }
 ```
@@ -41,23 +26,23 @@ int main()
 ```cpp
 test_data test_data_array[] =
     {
-        {{    1,                  4,                   -3},    {     TWO_ROOTS,    -4.6458,    0.6458,         NO_ERRORS},    &x1,    &x2},
-        {{    1,                  0,                   -4},    {     TWO_ROOTS,    -2.0000,    2.0000,         NO_ERRORS},    &x1,    &x2},
-        {{    0,                  0,                    0},    {INFINITE_ROOTS,          0,         0,         NO_ERRORS},    &x1,    &x2},
-        {{    0,                  4,                    5},    {      ONE_ROOT,    -1.2500,         0,         NO_ERRORS},    &x1,    &x2},
-        {{    0,                  0,                    5},    {       NO_ROOT,          0,         0,         NO_ERRORS},    &x1,    &x2},
-        {{    2,                  3,                    7},    {       NO_ROOT,          0,         0,         NO_ERRORS},    &x1,    &x2},
-        {{15246,             120536,              -645721},    {     TWO_ROOTS,   -11.5675,    3.6614,         NO_ERRORS},    &x1,    &x2},
-        {{    0,            1154526,             -1125452},    {      ONE_ROOT,     0.9748,         0,         NO_ERRORS},    &x1,    &x2},
-        {{    1,              -2068,              1069156},    {      ONE_ROOT,  1034.0000, 1034.0000,         NO_ERRORS},    &x1,    &x2},
-        {{    1,  3.4*pow(10.0, 20),              1231031},    {   ERROR_OCCUR,          0,         0, VARIABLE_OVERFLOW},    &x1,    &x2},
-        {{    1,                 10,   -3.4*pow(10.0, 38)},    {   ERROR_OCCUR,          0,         0, VARIABLE_OVERFLOW},    &x1,    &x2},
-        {{    0,                  0,                    0},    {   ERROR_OCCUR,          0,         0,      NULL_POINTER},   NULL,    &x2},
-        {{    0,                  0,                    0},    {   ERROR_OCCUR,          0,         0,      NULL_POINTER},    &x1,   NULL},
-        {{    0,                  0,                    0},    {   ERROR_OCCUR,          0,         0,    EQUAL_POINTERS},    &x1,    &x1},
-        {{  NAN,                  0,                    0},    {   ERROR_OCCUR,          0,         0,         NAN_INPUT},    &x1,    &x2},
-        {{    0,                  0,                  NAN},    {   ERROR_OCCUR,          0,         0,         NAN_INPUT},    &x1,    &x2},
-        {{    1,      pow(10.0, 19),   -0.7*pow(10.0, 38)},    {   ERROR_OCCUR,          0,         0, VARIABLE_OVERFLOW},    &x1,    &x2}
+        {{    1,                  4,                   -3},    {     TWO_ROOTS,    -4.6458,    0.6458},         NO_ERRORS,    &x1,    &x2},
+        {{    1,                  0,                   -4},    {     TWO_ROOTS,    -2.0000,    2.0000},         NO_ERRORS,    &x1,    &x2},
+        {{    0,                  0,                    0},    {INFINITE_ROOTS,          0,         0},         NO_ERRORS,    &x1,    &x2},
+        {{    0,                  4,                    5},    {      ONE_ROOT,    -1.2500,         0},         NO_ERRORS,    &x1,    &x2},
+        {{    0,                  0,                    5},    {       NO_ROOT,          0,         0},         NO_ERRORS,    &x1,    &x2},
+        {{    2,                  3,                    7},    {       NO_ROOT,          0,         0},         NO_ERRORS,    &x1,    &x2},
+        {{15246,             120536,              -645721},    {     TWO_ROOTS,   -11.5675,    3.6614},         NO_ERRORS,    &x1,    &x2},
+        {{    0,            1154526,             -1125452},    {      ONE_ROOT,     0.9748,         0},         NO_ERRORS,    &x1,    &x2},
+        {{    1,              -2068,              1069156},    {      ONE_ROOT,  1034.0000, 1034.0000},         NO_ERRORS,    &x1,    &x2},
+        {{    1,  3.4*pow(10.0, 20),              1231031},    {   ERROR_OCCUR,          0,         0}, VARIABLE_OVERFLOW,    &x1,    &x2},
+        {{    1,                 10,   -3.4*pow(10.0, 38)},    {   ERROR_OCCUR,          0,         0}, VARIABLE_OVERFLOW,    &x1,    &x2},
+        {{    0,                  0,                    0},    {   ERROR_OCCUR,          0,         0},      NULL_POINTER,   NULL,    &x2},
+        {{    0,                  0,                    0},    {   ERROR_OCCUR,          0,         0},      NULL_POINTER,    &x1,   NULL},
+        {{    0,                  0,                    0},    {   ERROR_OCCUR,          0,         0},    EQUAL_POINTERS,    &x1,    &x1},
+        {{  NAN,                  0,                    0},    {   ERROR_OCCUR,          0,         0},         NAN_INPUT,    &x1,    &x2},
+        {{    0,                  0,                  NAN},    {   ERROR_OCCUR,          0,         0},         NAN_INPUT,    &x1,    &x2},
+        {{    1,      pow(10.0, 19),   -0.7*pow(10.0, 38)},    {   ERROR_OCCUR,          0,         0}, VARIABLE_OVERFLOW,    &x1,    &x2}
     };
 ```
 и сам механизм тестирования, в котором запускается функция `kvadratka` от данных из `test_data_array`, а затем вывод сравнивается с ответами из `test_data_array` и в консоль выводится информация о прохождении теста:
@@ -69,8 +54,9 @@ for(int i = 0; i < (sizeof(test_data_array) / sizeof(test_data_array[0])); i++)
                                         test_data_array[i].data[2],
                                         test_data_array[i].x1,
                                         test_data_array[i].x2);
-        if(number_of_roots == int(test_data_array[i].data_check[0]) && number_of_roots == ERROR_OCCUR
-                && !floatcmp(float(errno), test_data_array[i].data_check[3]))
+        if(number_of_roots == int(test_data_array[i].data_check[0])
+        && number_of_roots == ERROR_OCCUR
+        && errno == test_data_array[i].error)
         {
             printf("test %i OK\n", i + 1);
             printf("ERROR %d\n", errno);
@@ -78,9 +64,9 @@ for(int i = 0; i < (sizeof(test_data_array) / sizeof(test_data_array[0])); i++)
         else
         {
             if(number_of_roots == int(test_data_array[i].data_check[0])
-                    && !floatcmp(x1, test_data_array[i].data_check[1])
-                    && !floatcmp(x2, test_data_array[i].data_check[2])
-                    && !floatcmp(float(errno), test_data_array[i].data_check[3]))
+            && !floatcmp(x1, test_data_array[i].data_check[1])
+            && !floatcmp(x2, test_data_array[i].data_check[2])
+            && !floatcmp(float(errno), test_data_array[i].data_check[3]))
                 printf("test %i OK\n", i + 1);
             else
             {
@@ -112,7 +98,7 @@ int floatcmp(float x1, float x2)
 ### schet_linear
 решает линейное уравнение от 2 коэффициентов, возвращает корень уравнения:
 ```cpp
-float schet_linear(float b, float c)
+static float schet_linear(float b, float c)
 {
     if(floatcmp(c, 0) == 0)
         return float(0);
@@ -123,8 +109,11 @@ float schet_linear(float b, float c)
 ### schet_kvadr
 Находит корни квадратного уравнения от переданных коэффициентов, выдает их в переданные по указателям переменные, возвращает количество корней уравнения, возвращает `ERROR_OCCUR` в случае ошибки и `INFINITE_ROOTS` в случае бесконечного количества корней:
 ```cpp
-int schet_kvadr(float a, float b, float c, float* x1, float* x2)
+static int schet_kvadr(float a, float b, float c, float* x1, float* x2)
 {
+    assert(isfinite(b * b));
+    assert(isfinite(4 * a * c));
+    assert(isfinite(b * b - 4 * a * c));
     if(!isfinite(b * b) || !isfinite(4 * a * c) || !isfinite(b * b - 4 * a * c))
     {
         errno = VARIABLE_OVERFLOW;
@@ -149,6 +138,12 @@ int schet_kvadr(float a, float b, float c, float* x1, float* x2)
 ```cpp
 int kvadratka(float a, float b, float c, float* x1, float* x2)
 {
+    assert(x1 != NULL);
+    assert(x2 != NULL);
+    assert(x1 != x2);
+    assert(!isnan(a));
+    assert(!isnan(b));
+    assert(!isnan(c));
     if(x1 == NULL || x2 == NULL)
     {
         errno = NULL_POINTER;
@@ -174,5 +169,28 @@ int kvadratka(float a, float b, float c, float* x1, float* x2)
         return ONE_ROOT;
     }
     return schet_kvadr(a, b, c, x1, x2);
+}
+
+int output(float a, float b, float c)
+{
+    float x1 = NAN, x2 = NAN;
+    int number_of_roots = kvadratka(a, b, c, &x1, &x2);
+    if(errno != 0)
+    {
+        printf("ERROR: %d\n", errno);
+        typeErrors(errno);
+        return errno;
+    }
+    if(number_of_roots != INFINITE_ROOTS)
+    {
+        printf("number of roots: %d\n", number_of_roots);
+        if(number_of_roots == ONE_ROOT)
+            printf("root: %.4f\n", x1);
+        if(number_of_roots == TWO_ROOTS)
+            printf("roots: %.4f %.4f\n", x1, x2);
+        return 0;
+    }
+    puts("roots belongs to R");
+    return 0;
 }
 ```
