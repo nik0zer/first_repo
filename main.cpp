@@ -8,9 +8,6 @@
 #define TEST true
 #define NUMBER_OF_TESTS 16
 
-enum rootnum {NO_ROOT, ONE_ROOT, TWO_ROOTS, ERROR_OCCUR, INFINITE_ROOTS = 8};
-enum errors {NO_ERRORS, VARIABLE_OVERFLOW, NULL_POINTER, EQUAL_POINTERS, NAN_INPUT};
-
 struct test_data
 {
     float data[3];
@@ -115,3 +112,4 @@ int main()
     puts("roots belongs to R");
     return 0;
 }
+
