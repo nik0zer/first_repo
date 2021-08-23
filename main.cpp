@@ -41,7 +41,7 @@ void test()
         {{    0,                  0,                    0},    {   ERROR_OCCUR,          0,         0,    EQUAL_POINTERS},    &x1,    &x1},
         {{  NAN,                  0,                    0},    {   ERROR_OCCUR,          0,         0,         NAN_INPUT},    &x1,    &x2},
         {{    0,                  0,                  NAN},    {   ERROR_OCCUR,          0,         0,         NAN_INPUT},    &x1,    &x2},
-        {{    1,      pow(10.0, 19),   -0.7*pow(10.0, 38)},   {   ERROR_OCCUR,          0,         0, VARIABLE_OVERFLOW},    &x1,    &x2}
+        {{    1,      pow(10.0, 19),   -0.7*pow(10.0, 38)},    {   ERROR_OCCUR,          0,         0, VARIABLE_OVERFLOW},    &x1,    &x2}
     };
     for(int i = 0; i < (sizeof(test_data_array) / sizeof(test_data_array[0])); i++)
     {
