@@ -44,6 +44,7 @@ void test()
         {{    0,                  0,                  NAN},    {   ERROR_OCCUR,          0,         0},         NAN_INPUT,    &x1,    &x2},
         {{    1,      pow(10.0, 19),   -0.7*pow(10.0, 38)},    {   ERROR_OCCUR,          0,         0}, VARIABLE_OVERFLOW,    &x1,    &x2}
     };
+
     for(int i = 0; i < (sizeof(test_data_array) / sizeof(test_data_array[0])); i++)
     {
         int number_of_roots = kvadratka(test_data_array[i].data[0],
@@ -58,6 +59,7 @@ void test()
             printf("test %i OK\n", i + 1);
             printf("ERROR %d\n", errno);
         }
+
         else
         {
             if(number_of_roots == int(test_data_array[i].data_check[0])
@@ -88,6 +90,7 @@ int main()
 #if TEST
     test();
     return 0;
+
 #else
     puts("type a b c");
     if(scanf("%f %f %f", &a, &b, &c) != 3)
