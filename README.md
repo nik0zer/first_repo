@@ -10,6 +10,7 @@ int main()
 #if TEST
     test();
     return 0;
+
 #else
     puts("type a b c");
     if(scanf("%f %f %f", &a, &b, &c) != 3)
@@ -61,6 +62,7 @@ for(int i = 0; i < (sizeof(test_data_array) / sizeof(test_data_array[0])); i++)
             printf("test %i OK\n", i + 1);
             printf("ERROR %d\n", errno);
         }
+
         else
         {
             if(number_of_roots == int(test_data_array[i].data_check[0])
@@ -114,18 +116,21 @@ static int schet_kvadr(float a, float b, float c, float* x1, float* x2)
     assert(isfinite(b * b));
     assert(isfinite(4 * a * c));
     assert(isfinite(b * b - 4 * a * c));
+
     if(!isfinite(b * b) || !isfinite(4 * a * c) || !isfinite(b * b - 4 * a * c))
     {
         errno = VARIABLE_OVERFLOW;
         return ERROR_OCCUR;
     }
+
     float d = (b * b) - (4 * a * c);
     if(d < 0)
     {
         *x1 = 0;
         *x2 = 0;
-        return 0;
+        return NO_ROOT;
     }
+
     float change_part = sqrt(d) / (2 * a);
     float const_part = -b / (2 * a);
     *x1 = -change_part + const_part;
@@ -144,53 +149,37 @@ int kvadratka(float a, float b, float c, float* x1, float* x2)
     assert(!isnan(a));
     assert(!isnan(b));
     assert(!isnan(c));
+
     if(x1 == NULL || x2 == NULL)
     {
         errno = NULL_POINTER;
         return ERROR_OCCUR;
     }
+
     if(x2 == x1)
     {
         errno = EQUAL_POINTERS;
         return ERROR_OCCUR;
     }
+
     if(isnan(a) || isnan(b) || isnan(c))
     {
         errno = NAN_INPUT;
         return ERROR_OCCUR;
     }
+
     *x1 = 0;
     *x2 = 0;
+
     if(!floatcmp(a, 0) && !floatcmp(b, 0))
         return (!floatcmp(c, 0)) ? INFINITE_ROOTS : NO_ROOT;
+
     if(!floatcmp(a, 0))
     {
         *x1 = schet_linear(b, c);
         return ONE_ROOT;
     }
-    return schet_kvadr(a, b, c, x1, x2);
-}
 
-int output(float a, float b, float c)
-{
-    float x1 = NAN, x2 = NAN;
-    int number_of_roots = kvadratka(a, b, c, &x1, &x2);
-    if(errno != 0)
-    {
-        printf("ERROR: %d\n", errno);
-        typeErrors(errno);
-        return errno;
-    }
-    if(number_of_roots != INFINITE_ROOTS)
-    {
-        printf("number of roots: %d\n", number_of_roots);
-        if(number_of_roots == ONE_ROOT)
-            printf("root: %.4f\n", x1);
-        if(number_of_roots == TWO_ROOTS)
-            printf("roots: %.4f %.4f\n", x1, x2);
-        return 0;
-    }
-    puts("roots belongs to R");
-    return 0;
+    return schet_kvadr(a, b, c, x1, x2);
 }
 ```
